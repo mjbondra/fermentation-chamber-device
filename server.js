@@ -37,9 +37,9 @@ var climateFunctions = {
 
 // events
 climate.on('error', function (err) {
- console.error('Climate module error', err);
- climateFunctions.update = climateFunctions.noop;
- climateData = { humidity: 0, temperature: 0 };
+  console.error('Climate module error', err);
+  climateFunctions.update = climateFunctions.noop;
+  climateData = { humidity: 0, temperature: 0 };
 });
 climate.on('ready', function () {
   console.log('Connected to si7005 climate module');
