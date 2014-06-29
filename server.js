@@ -4,7 +4,7 @@
  */
 var tessel = require('tessel')
   , climate = require('climate-si7005').use(tessel.port.B)
-  , duration = 1000
+  , duration = 1000 // 1 second
   , ip = require('os').networkInterfaces().en1[0].address
   , net = require('net')
   , port = 1337;
@@ -31,6 +31,7 @@ var climateFunctions = {
         climateData.humidity = humid.toFixed(4);
       });
     });
+    setTimeout(climateFunctions.update, duration);
   },
   update: function () {}
 };
@@ -62,7 +63,6 @@ var socketFunctions = {
     connections = [];
   },
   loop: function (socket) {
-    climateFunctions.update();
     setTimeout(function () {
       socket.write(JSON.stringify(climateData) + '\r\n');
       socketFunctions[socket.id](socket);
