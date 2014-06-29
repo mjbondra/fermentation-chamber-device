@@ -1,6 +1,6 @@
 {
   "name": "brewsel",
-  "description": "Tessel-driven temperature-control for homebrewers",
+  "description": "Fermentation chamber device layer — climate reporting and relay toggling using a Tessel",
   "version": "0.0.1",
   "author": {
     "name": "Michael J. Bondra",

@@ -4,7 +4,7 @@
  */
 var tessel = require('tessel')
   , climate = require('climate-si7005').use(tessel.port.B)
-  , duration = 1000
+  , duration = 5000
   , ip = require('os').networkInterfaces().en1[0].address
   , port = 1337
   , net = require('net');
@@ -12,11 +12,34 @@ var tessel = require('tessel')
 /**
  * Climate module
  */
+
+// vars
+var climateData = {
+  humidity: 0,
+  temperature: 0
+};
+
+// functions
+var climateLoop = function () {
+  climate.readTemperature('f', function (err, temp) {
+    if (err) return console.error(err);
+    climateData.temperature = temp.toFixed(4);
+  });
+  climate.readHumidity(function (err, humid) {
+    if (err) return console.error(err);
+    climateData.humidity = humid.toFixed(4);
+  });
+  setTimeout(climateLoop, duration);
+};
+
+// events
 climate.on('error', function (err) {
- console.error('error connecting module', err);
+ console.error('Climate module error', err);
+ climateLoop = function () {};
 });
 climate.on('ready', function () {
   console.log('Connected to si7005 climate module');
+  climateLoop();
 });
 
 /**
@@ -29,14 +52,10 @@ var connections = [];
 // functions
 var socketLoops = {
   loop: function (socket) {
+    socket.write(JSON.stringify(climateData) + '\r\n');
     setTimeout(function () {
       socketLoops[socket.id](socket);
     }, duration);
-    climate.readTemperature('f', function (err, temp) {
-      climate.readHumidity(function (err, humid) {
-        socket.write('Degrees: ' + temp.toFixed(4) + 'F\r\n');
-      });
-    });
   },
   remove: function (socket) {
     delete socketLoops[socket.id];
@@ -48,6 +67,7 @@ var closeSockets = function () {
   connections = [];
 };
 
+// events
 var server = net.createServer(function (socket) {
   closeSockets(); // close other sockets; limit to one open connection
   socket.id = Math.round(new Date().getTime());
