@@ -1,0 +1,13 @@
+{
+  "name": "brewsel",
+  "description": "Tessel-driven temperature-control for homebrewers",
+  "version": "0.0.1",
+  "author": {
+    "name": "Michael J. Bondra",
+    "email": "mjbondra@gmail.com",
+    "url": "https://twitter.com/mjbondra"
+  },
+  "dependencies": {
+    "climate-si7005": "0.1.3"
+  }
+}
