@@ -1,4 +1,4 @@
 fermentation-chamber-device
 ===========================
 
-Fermentation chamber climate reporting and relay toggling for Tessel
+Fermentation chamber device layer — climate reporting and relay toggling using a Tessel 
