@@ -1,5 +1,5 @@
 {
-  "name": "brewsel",
+  "name": "fermentation-chamber-device",
   "description": "Fermentation chamber device layer — climate reporting and relay toggling using a Tessel",
   "version": "0.0.1",
   "author": {
