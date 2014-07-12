@@ -10,6 +10,7 @@ module.exports = {
   socket: {
     host: 'localhost',
     interval: 1000, // 1 second
-    port: 1337
+    port: 1337,
+    timeout: 5000
   }
 };

@@ -16,12 +16,16 @@ var tessel = require('tessel')
 
 var client, connect = function () {
   client = net.connect(port, host, function () {
-    console.log('Tessel connected to: ', { host: host, port: port });
+    console.log('Tessel connected to host: ', config.socket);
     client.on('close', function () {
       reconnect();
     });
     client.on('data', function (data) {
       console.log(data.toString());
+    });
+    client.setTimeout(config.socket.timeout, function () {
+      console.log('Tessel connection will be closed due to inactivity');
+      client.destroy();
     });
   });
   client.on('error', function (err) {
@@ -48,6 +52,7 @@ var climateData = {
       climate.readHumidity(function (err, humid) { // sync reads; async reads distort reporting on one or both values
         if (err) return console.error(err);
         data.humidity = humid.toFixed(4);
+        data.createdAt = new Date().getTime();
       });
     });
     setTimeout(function () {
