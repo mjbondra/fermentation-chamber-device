@@ -5,17 +5,14 @@
 var tessel = require('tessel')
   , config = require('./config')
   , climate = require('climate-si7005').use(tessel.port[config.climate.port])
-  , interval = config.socket.interval
-  , host = config.socket.host
-  , net = require('net')
-  , port = config.socket.port;
+  , net = require('net');
 
 /**
  * TCP server
  */
 
 var client, connect = function () {
-  client = net.connect(port, host, function () {
+  client = net.connect(config.socket.port, config.socket.host, function () {
     console.log('Tessel connected to host: ', config.socket);
     client.on('close', function () {
       reconnect();
@@ -33,10 +30,11 @@ var client, connect = function () {
     reconnect();
   });
 }, reconnect = function () {
-  console.log('Tessel connection closed. Re-connecting in 15 seconds');
-  setTimeout(connect, 15000); // retry connection
+  console.log('Tessel connection closed. Re-connecting in ' + ( config.socket.offset / 1000 ) + ' seconds');
+  setTimeout(connect, config.socket.offset); // retry connection
 };
-connect();
+console.log('Connecting in ' + ( config.socket.offset / 1000 ) + ' seconds', config.socket);
+setTimeout(connect, config.socket.offset);
 
 /**
  * Climate module
@@ -56,9 +54,9 @@ var climateData = {
       });
     });
     setTimeout(function () {
-      if (!!client.write) client.write(JSON.stringify(data));
+      if (!!client && !!client.write) client.write(JSON.stringify(data));
       climateData.update(data);
-    }, interval);
+    }, config.socket.interval);
   },
   noop: function () {},
   update: function () {}
