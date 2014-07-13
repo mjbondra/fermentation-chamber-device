@@ -13,7 +13,7 @@ var tessel = require('tessel')
 
 var client, connect = function () {
   client = net.connect(config.socket.port, config.socket.host, function () {
-    console.log('Tessel connected to host: ', config.socket);
+    console.log('Connected to host: ', config.socket);
     client.on('close', function () {
       reconnect();
     });
@@ -21,7 +21,7 @@ var client, connect = function () {
       console.log(data.toString());
     });
     client.setTimeout(config.socket.timeout, function () {
-      console.log('Tessel connection will be closed due to inactivity');
+      console.log('Connection to host will be closed due to inactivity: ', config.socket);
       client.destroy();
     });
   });
@@ -30,10 +30,10 @@ var client, connect = function () {
     reconnect();
   });
 }, reconnect = function () {
-  console.log('Tessel connection closed. Re-connecting in ' + ( config.socket.offset / 1000 ) + ' seconds');
+  console.log('Connection to host closed. Re-connecting in ' + ( config.socket.offset / 1000 ) + ' seconds: ', config.socket);
   setTimeout(connect, config.socket.offset); // retry connection
 };
-console.log('Connecting in ' + ( config.socket.offset / 1000 ) + ' seconds', config.socket);
+console.log('Connecting to host in ' + ( config.socket.offset / 1000 ) + ' seconds: ', config.socket);
 setTimeout(connect, config.socket.offset);
 
 /**
